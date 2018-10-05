@@ -2,14 +2,23 @@ import React from 'react'
 import { compose, withProps } from "recompose"
 import withScriptjs from 'react-google-maps/lib/withScriptjs'
 import withGoogleMap from 'react-google-maps/lib/withGoogleMap';
-import {GoogleMap} from 'react-google-maps';
+import GoogleMap from 'react-google-maps/lib/components/GoogleMap';
+import Polygon from 'react-google-maps/lib/components/Polygon';
 import {connect} from 'react-redux';
 import {updateExtent} from '../actions';
+
+const convertGeoToLatLng = (points) => {
+  return points.map(arr => {
+    /*eslint-disable no-undef*/
+    return new google.maps.LatLng(arr[1], arr[0]);
+    /*eslint-enable no-undef*/
+  })
+}
 
 const mapStateToProps = (state) => {
   return {
     extent: state.extent,
-    results: state.results
+    layers: state.results.features
   }
 }
 
@@ -37,11 +46,10 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
         ymax: bounds.f.f
       }
       this.props.updateExtent(extent);
-    } else {
-      console.log('bounds changed');
     }
   }
   render() {
+    const layers = this.props.layers || [];
     return (
       <GoogleMap {...this.props} 
         defaultCenter={{lat: 47, lng: -122}}
@@ -49,6 +57,20 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
         onBoundsChanged={this.onBoundsChanged}
         ref={this.onMapMounted}
       >
+        {layers.map(layer => {
+          const {geometry} = layer;
+          
+          const box = convertGeoToLatLng(geometry.coordinates[0]);
+          return (
+            <Polygon key={layer.properties.url} paths={[box]} options={{
+              fillColor: `red`,
+              fillOpacity: 0.20,
+              strokeColor: `red`,
+              strokeOpacity: 1,
+              strokeWeight: 1,
+            }} />
+          )
+        })}
       </GoogleMap>
     )
   }
@@ -56,7 +78,7 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
 
 export default compose(withProps({
   googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCnsXL4I-KASiPslRKoo59ojStoDr9LjQU",
-  loadingElement: <div style={{ height: `95%` }} />,
-  containerElement: <div style={{ height: `500px` }} />,
+  loadingElement: <div style={{ height: `100%` }} />,
+  containerElement: <div style={{ height: `450px` }} />,
   mapElement: <div style={{ height: `100%` }} />,
 }))(PineMap)
