@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import { withStyles } from '@material-ui/core/styles';
 import SearchBar from './SearchBar';
 import ResultList from './ResultList';
+import PineMap from './PineMap';
 import {connect} from 'react-redux';
 const styles = theme => ({
   root: {
@@ -26,7 +27,7 @@ class Content extends React.Component {
           </Grid>
           <Grid item xs={6}>
             <Paper className={classes.paper}>
-              Placeholder for google map
+              <PineMap />
             </Paper>
           </Grid>
           <Grid item xs={6}> 

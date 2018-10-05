@@ -7,7 +7,6 @@ import Content from './components/Content';
 class App extends Component {
   render() {
     return (
-      
         <MuiThemeProvider theme={theme}>
             <AppBar position='sticky' color='primary'>
               <Toolbar>
@@ -16,7 +15,6 @@ class App extends Component {
             </AppBar>
             <Content />
         </MuiThemeProvider>
-      
     );
   }
 }
