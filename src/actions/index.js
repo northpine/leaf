@@ -1,4 +1,4 @@
-import {UPDATE_SEARCH, REPLACE_RESULTS, UPDATE_EXTENT} from '../constants';
+import {UPDATE_SEARCH, REPLACE_RESULTS, UPDATE_EXTENT, UPDATE_OPEN_SERVER, CLOSE_SERVER, UPDATE_HIGHLIGHTED_LAYER} from '../constants';
 import axios from 'axios';
 export const updateSearch = (searchString) => {
   return {
@@ -18,6 +18,36 @@ export const updateExtent = (extent) => {
   return {
     type: UPDATE_EXTENT,
     extent: extent
+  }
+}
+
+export const updateOpenServer = (url) => {
+  return {
+    type: UPDATE_OPEN_SERVER,
+    server: url
+  }
+}
+
+export const closeServer = (url) => {
+  return {
+    type: CLOSE_SERVER,
+    server: url
+  }
+}
+
+export const highlightLayer = (url) => {
+  return {
+    type: UPDATE_HIGHLIGHTED_LAYER,
+    url: url,
+    highlight: true
+  }
+}
+
+export const unHighlightLayer = (url) => {
+  return {
+    type: UPDATE_HIGHLIGHTED_LAYER,
+    url: url,
+    highlight: false
   }
 }
 

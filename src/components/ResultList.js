@@ -1,46 +1,33 @@
 import React from 'react';
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell';
 import {connect} from 'react-redux';
-import TableHead from '@material-ui/core/TableHead';
+import ServerList from './ServerList';
+import List from '@material-ui/core/List';
+import { withStyles } from '@material-ui/core/styles';
 
-const shortenUrl = (urlStr) => {
-  const url = new URL(urlStr);
-  return `${url.protocol}//${url.hostname}`;
-}
+
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+    position: 'relative',
+    overflow: 'auto',
+    maxHeight: '87vh',
+  },
+});
 
 class ResultList extends React.Component {
   render() {
-    const {results} = this.props;
-    if(results) {
+    const {servers, classes} = this.props;
+    if(servers) {
       return (
-        <Table>
-          <TableHead>
-            <TableCell>
-              Layer Name
-            </TableCell>
-            <TableCell>
-              URL
-            </TableCell>
-          </TableHead>
-          <TableBody>
-             {results.map((result => {
-              const {name, url} = result.properties
-              return (
-                <TableRow>
-                  <TableCell>
-                    {name}
-                  </TableCell>
-                  <TableCell>
-                    <a href={url} target="_blank">{shortenUrl(url)}</a>
-                  </TableCell>
-                </TableRow>
-              )
-            }))}
-          </TableBody>
-        </Table>
+        <div className={classes.root}>
+          <List component="nav">
+            {Object.keys(servers).map(server => {
+              return <ServerList url={server} />
+            })}
+          </List>
+        </div>
       )
     } else {
       return "Nothing loaded"
@@ -50,9 +37,8 @@ class ResultList extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
   return {
-    results: state.results.features
+    servers: state.results.servers
   }
 
 }
@@ -62,4 +48,4 @@ const mapStateToDispatch = (dispatch, ownProps) => {
 }
 
 
-export default connect(mapStateToProps, mapStateToDispatch)(ResultList);
+export default withStyles(styles)(connect(mapStateToProps, mapStateToDispatch)(ResultList));

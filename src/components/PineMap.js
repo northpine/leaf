@@ -18,7 +18,8 @@ const convertGeoToLatLng = (points) => {
 const mapStateToProps = (state) => {
   return {
     extent: state.extent,
-    layers: state.results.features
+    layers: state.results.layers,
+    highlighted: state.highlight.url
   }
 }
 
@@ -39,6 +40,7 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
   onBoundsChanged = () => {
     if(this.state.map) {
       const bounds = this.state.map.getBounds();
+      //Google maps is weird...
       const extent = {
         xmin: bounds.b.b,
         ymin: bounds.f.b,
@@ -49,7 +51,23 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
     }
   }
   render() {
-    const layers = this.props.layers || [];
+    const { highlighted, layers = [] } = this.props;
+    let hLayerPolygon;
+    if(highlighted) {
+      const hLayer = layers[highlighted];
+      const hBox = convertGeoToLatLng(hLayer.geometry.coordinates[0]);
+      hLayerPolygon = (
+        <Polygon key={highlighted} paths={[hBox]} options={{
+          fillColor: "red",
+          fillOpacity: 0.10,
+          strokeColor: "red",
+          strokeOpacity: 1,
+          strokeWeight: 1,
+        }}
+        />
+      )
+    }
+
     return (
       <GoogleMap {...this.props} 
         defaultCenter={{lat: 47, lng: -122}}
@@ -57,20 +75,21 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
         onBoundsChanged={this.onBoundsChanged}
         ref={this.onMapMounted}
       >
-        {layers.map(layer => {
+        {Object.keys(layers).filter(key => highlighted !== key).map(key => layers[key]).map(layer => {
           const {geometry} = layer;
           
           const box = convertGeoToLatLng(geometry.coordinates[0]);
           return (
             <Polygon key={layer.properties.url} paths={[box]} options={{
-              fillColor: `red`,
-              fillOpacity: 0.20,
-              strokeColor: `red`,
+              fillColor: `gray`,
+              fillOpacity: 0,
+              strokeColor: `gray`,
               strokeOpacity: 1,
               strokeWeight: 1,
             }} />
           )
         })}
+        {hLayerPolygon}
       </GoogleMap>
     )
   }
@@ -79,6 +98,6 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
 export default compose(withProps({
   googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCnsXL4I-KASiPslRKoo59ojStoDr9LjQU",
   loadingElement: <div style={{ height: `100%` }} />,
-  containerElement: <div style={{ height: `450px` }} />,
-  mapElement: <div style={{ height: `100%` }} />,
+  containerElement: <div style={{ height: `92vh` }} />,
+  mapElement: <div style={{ height: `92vh` }} />,
 }))(PineMap)
