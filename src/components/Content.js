@@ -2,7 +2,6 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import { withStyles } from '@material-ui/core/styles';
-import SearchBar from './SearchBar';
 import ResultList from './ResultList';
 import PineMap from './PineMap';
 import {connect} from 'react-redux';
@@ -21,19 +20,14 @@ class Content extends React.Component {
   render() {
     const {classes} = this.props;
     return (
-        <Grid container spacing={24}>
-          <Grid item xs={12}>
-            <SearchBar />
-          </Grid>
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <PineMap />
-            </Paper>
-          </Grid>
-          <Grid item xs={6}> 
+        <Grid container spacing={0}>
+          <Grid item xs={4} spacing={0}> 
             <Paper className={classes.paper}>
               <ResultList />
             </Paper>
+          </Grid>
+          <Grid item xs={8} spacing={0}>
+            <PineMap />
           </Grid>
         </Grid>
       

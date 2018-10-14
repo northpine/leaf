@@ -26,7 +26,7 @@ export const submitSearch = () => {
     const {search, extent} = getState();
     const {xmin, ymin, xmax, ymax} = extent;
     console.log(extent);
-    const result = await axios.get(`/get?phrase=${search}&xmin=${xmin}&ymin=${ymin}&xmax=${xmax}&ymax=${ymax}`);
+    const result = await axios.get(`https://pine.center/get?phrase=${search}&xmin=${xmin}&ymin=${ymin}&xmax=${xmax}&ymax=${ymax}`);
     console.log(result);
     dispatch(replaceResults(result.data.message))
   }
