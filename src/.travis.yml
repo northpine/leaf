@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+ — “8”
+install:
+  — yarn global install firebase-tools
+jobs:
+  include:
+    - stage: deploy
+      script: ./deploy.sh
+      if: branch = master
+
+after_success:
+ — firebase deploy --token "$FIREBASE_TOKEN"
