@@ -1,4 +1,4 @@
-import {UPDATE_SEARCH, REPLACE_RESULTS, UPDATE_EXTENT, UPDATE_OPEN_SERVER, CLOSE_SERVER, UPDATE_HIGHLIGHTED_LAYER} from '../constants';
+import {UPDATE_SEARCH, REPLACE_RESULTS, UPDATE_EXTENT, UPDATE_OPEN_SERVER, CLOSE_SERVER, UPDATE_HIGHLIGHTED_LAYER, UDPATE_SELECTED_LAYER} from '../constants';
 import axios from 'axios';
 export const updateSearch = (searchString) => {
   return {
@@ -50,6 +50,15 @@ export const unHighlightLayer = (url) => {
     highlight: false
   }
 }
+
+export const updateSelectedLayer = (url, select = true) => {
+  return {
+    type: UDPATE_SELECTED_LAYER,
+    url: url,
+    select: select
+  }
+}
+
 
 export const submitSearch = () => {
   return async (dispatch, getState) => {

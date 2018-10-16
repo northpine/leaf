@@ -5,7 +5,7 @@ export const UPDATE_EXTENT = "UPDATE_EXTENT";
 export const UPDATE_OPEN_SERVER = "UPDATE_OPEN_SERVER";
 export const CLOSE_SERVER = "CLOSE_SERVER";
 export const UPDATE_HIGHLIGHTED_LAYER = "UPDATE_HIGHTLIGHTED_LAYER";
-
+export const UDPATE_SELECTED_LAYER = "UPDATE_SELECTED_LAYER";
 export const GITHUB_REPO = "https://github.com/northpine/leaf"
 export const DEFAULT_EXTENT = {
   xmin: -180.00,

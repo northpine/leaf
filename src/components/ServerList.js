@@ -5,46 +5,62 @@ import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import {updateOpenServer, closeServer, highlightLayer, unHighlightLayer} from '../actions'
+import {updateOpenServer, closeServer, highlightLayer, unHighlightLayer, updateSelectedLayer} from '../actions'
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Description from './Description'
-
+import OpenInNew from "@material-ui/icons/OpenInNew";
+import IconButton from '@material-ui/core/IconButton';
 import { openInNewTab } from '../utils';
 const styles = theme => ({
   nested: {
     paddingLeft: theme.spacing.unit * 4,
+    padding: 0,
   }
 })
 
 class ServerList extends React.Component {
 
-  state = {
-    openIndex: -1
+  onLayerClick = url => () => {
+    this.props.selectLayer(url, this.props.selected !== url);
+  }
+
+  onLayerMouseEnter = url => () => {
+    this.props.highlightLayer(url);
+  }
+
+  onLayerMouseLeave = url => () => {
+      this.props.unHighlightLayer(url); 
   }
 
   render() {
-    const {layers, url, isOpen, classes, closeServer, openServer, highlightLayer, unHighlightLayer, layerData} = this.props;
+    const {layers, url, isOpen, classes, closeServer, openServer, layerData, selected} = this.props;
 
     return (
       <div>
-        <ListItem button 
+        <ListItem button dense
           onClick={() => isOpen ? closeServer() : openServer()} >
           <ListItemText primary={url}/>
           {isOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={isOpen} timeout='auto' unmountOnExit>
-          <List component="div" disablePadding>
+          <List component="div" disablePadding dense>
             {layers.map(layer => {
               return (
                 <ListItem button className={classes.nested}
-                onMouseEnter={highlightLayer(layer.url)}
-                onMouseLeave={unHighlightLayer(layer.url)}>
-                  <ListItemText inset primary={layer.name} onClick={openInNewTab(layer.url)}/>
-                  <ListItemSecondaryAction>
-                    <Description text={layerData[layer.url].properties.description}/>
-                  </ListItemSecondaryAction>
+                dense
+                selected={selected === layer.url}
+                onClick={this.onLayerClick(layer.url)}
+                onMouseLeave={this.onLayerMouseLeave(layer.url)}
+                onMouseEnter={this.onLayerMouseEnter(layer.url)}
+                >
+                  <ListItemText inset primary={layer.name}/>
+
+                  <Description text={layerData[layer.url].properties.description}/>
+                  <IconButton onClick={openInNewTab(layer.url)}>
+                    <OpenInNew />
+                  </IconButton>
+                  
                 </ListItem>
               )
             })}
@@ -65,7 +81,8 @@ const mapStateToProps = (state, ownProps) => {
     layers: servers[url],
     isOpen: state.open === url,
     layerData: layers,
-    highlighted: state.highlighted
+    highlight: state.highlight,
+    selected: state.selected
   }
 }
 
@@ -74,8 +91,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     closeServer: () => dispatch(closeServer(url)),
     openServer: () => dispatch(updateOpenServer(url)),
-    highlightLayer: layerUrl => () => dispatch(highlightLayer(layerUrl)),
-    unHighlightLayer: layerUrl => () => dispatch(unHighlightLayer(layerUrl))
+    selectLayer: (url, select) => dispatch(updateSelectedLayer(url, select)),
+    highlightLayer: (layerUrl) => dispatch(highlightLayer(layerUrl)),
+    unHighlightLayer: (layerUrl) => dispatch(unHighlightLayer(layerUrl))
   }
 }
 

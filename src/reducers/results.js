@@ -5,11 +5,11 @@ export default (state = {}, action) => {
   switch(action.type) {
     case REPLACE_RESULTS:
 
-      const {features} = action.results;
+      const {features = []} = action.results;
       //We're going to group by server here.
       const serverList = {};
       const layerList = {};
-      features.forEach((feature) => {
+      features.sort().forEach((feature) => {
         const layerUrl = feature.properties.url;
         const baseUrl = shortenUrl(layerUrl);
         if(!serverList[baseUrl]) {
@@ -21,6 +21,7 @@ export default (state = {}, action) => {
           name: feature.properties.name
         });
       });
+
       return Object.assign({}, {
         servers: serverList,
         layers: layerList

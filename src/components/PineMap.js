@@ -5,7 +5,8 @@ import withGoogleMap from 'react-google-maps/lib/withGoogleMap';
 import GoogleMap from 'react-google-maps/lib/components/GoogleMap';
 import Polygon from 'react-google-maps/lib/components/Polygon';
 import {connect} from 'react-redux';
-import {updateExtent} from '../actions';
+import {updateExtent, updateOpenServer, updateSelectedLayer} from '../actions';
+import { shortenUrl } from '../utils';
 
 const convertGeoToLatLng = (points) => {
   return points.map(arr => {
@@ -19,13 +20,34 @@ const mapStateToProps = (state) => {
   return {
     extent: state.extent,
     layers: state.results.layers,
-    highlighted: state.highlight.url
+    highlighted: state.highlight.url,
+    selected: state.selected
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateExtent: extent => dispatch(updateExtent(extent))
+    updateExtent: extent => dispatch(updateExtent(extent)),
+    updateSelectedLayer: (url, select) => dispatch(updateSelectedLayer(url, select)),
+    openServer: url => dispatch(updateOpenServer(url))
+  }
+}
+
+class PinePolygon extends React.Component {
+  render() {
+    const {geometry, onPolygonClick, color, fill, url} = this.props;
+    const box = convertGeoToLatLng(geometry.coordinates[0]);
+    return (
+      <Polygon key={url} paths={[box]} 
+        onClick={onPolygonClick}
+        options={{
+          fillColor: color,
+          fillOpacity: fill,
+          strokeColor: color,
+          strokeOpacity: 1,
+          strokeWeight: 1
+        }} />
+    )
   }
 }
 
@@ -51,21 +73,11 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
     }
   }
   render() {
-    const { highlighted, layers = [] } = this.props;
-    let hLayerPolygon;
-    if(highlighted) {
-      const hLayer = layers[highlighted];
-      const hBox = convertGeoToLatLng(hLayer.geometry.coordinates[0]);
-      hLayerPolygon = (
-        <Polygon key={highlighted} paths={[hBox]} options={{
-          fillColor: "red",
-          fillOpacity: 0.10,
-          strokeColor: "red",
-          strokeOpacity: 1,
-          strokeWeight: 1,
-        }}
-        />
-      )
+    const { highlighted, selected, layers = [] } = this.props;
+
+    const onPolygonClick = url => () => {
+      this.props.updateSelectedLayer(url, selected !== url);
+      this.props.openServer(shortenUrl(url));
     }
 
     return (
@@ -75,21 +87,19 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
         onBoundsChanged={this.onBoundsChanged}
         ref={this.onMapMounted}
       >
-        {Object.keys(layers).filter(key => highlighted !== key).map(key => layers[key]).map(layer => {
-          const {geometry} = layer;
-          
-          const box = convertGeoToLatLng(geometry.coordinates[0]);
+        {Object.keys(layers).map(key => layers[key]).map((layer) => {
+          const {url} = layer.properties;
+          const color = selected === url ? `red` : highlighted === url ? `blue` : `gray`;
+          const fill = selected === url || highlighted === url ? 0.10 : 0;
           return (
-            <Polygon key={layer.properties.url} paths={[box]} options={{
-              fillColor: `gray`,
-              fillOpacity: 0,
-              strokeColor: `gray`,
-              strokeOpacity: 1,
-              strokeWeight: 1,
-            }} />
+            <PinePolygon onPolygonClick={onPolygonClick(layer.properties.url)}
+              color={color}
+              geometry={layer.geometry}
+              fill={fill}
+              url={url}
+            />
           )
         })}
-        {hLayerPolygon}
       </GoogleMap>
     )
   }
