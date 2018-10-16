@@ -1,3 +1,2 @@
 #!/bin/sh
-yarn build
-firebase deploy --token $FIREBASE_TOKEN
+yarn install && yarn build && firebase deploy --token $FIREBASE_TOKEN
