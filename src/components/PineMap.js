@@ -60,14 +60,16 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
     }
   }
   onBoundsChanged = () => {
-    if(this.state.map) {
-      const bounds = this.state.map.getBounds();
+    const {map} = this.state;
+    if(map) {
+      const bounds = map.getBounds();
+      console.log(bounds);
       //Google maps is weird...
       const extent = {
-        xmin: bounds.b.b,
-        ymin: bounds.f.b,
-        xmax: bounds.b.f,
-        ymax: bounds.f.f
+        xmin: bounds.j.j,
+        ymin: bounds.l.j,
+        xmax: bounds.j.l,
+        ymax: bounds.j.l
       }
       this.props.updateExtent(extent);
     }
