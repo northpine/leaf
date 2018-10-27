@@ -49,6 +49,7 @@ class ServerList extends React.Component {
               return (
                 <ListItem button className={classes.nested}
                 dense
+                key={layer.url}
                 selected={selected === layer.url}
                 onClick={this.onLayerClick(layer.url)}
                 onMouseLeave={this.onLayerMouseLeave(layer.url)}

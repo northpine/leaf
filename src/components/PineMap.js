@@ -94,6 +94,7 @@ const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchT
           const fill = selected === url || highlighted === url ? 0.10 : 0;
           return (
             <PinePolygon onPolygonClick={onPolygonClick(layer.properties.url)}
+              key={layer.properties.url}
               color={color}
               geometry={layer.geometry}
               fill={fill}

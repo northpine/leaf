@@ -25,7 +25,6 @@ export default (state = {}, action) => {
           }
         });
       }
-
       return Object.assign({}, {
         servers: serverList,
         layers: layerList
