@@ -21,12 +21,12 @@ class Content extends React.Component {
     const {classes} = this.props;
     return (
         <Grid container spacing={0}>
-          <Grid item xs={4} spacing={0}> 
+          <Grid item xs={4} > 
             <Paper className={classes.paper}>
               <ResultList />
             </Paper>
           </Grid>
-          <Grid item xs={8} spacing={0}>
+          <Grid item xs={8}>
             <PineMap />
           </Grid>
         </Grid>

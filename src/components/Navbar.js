@@ -51,7 +51,7 @@ class PrimarySearchAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+            <Typography className={classes.title} variant="display1" color="inherit" noWrap>
               Pine
             </Typography>
             <SearchBar />

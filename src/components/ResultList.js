@@ -24,7 +24,7 @@ class ResultList extends React.Component {
         <div className={classes.root}>
           <List component="nav">
             {Object.keys(servers).map(server => {
-              return <ServerList url={server} />
+              return <ServerList key={server} url={server} />
             })}
           </List>
         </div>

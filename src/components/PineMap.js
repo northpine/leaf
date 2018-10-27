@@ -55,22 +55,21 @@ class PinePolygon extends React.Component {
 const PineMap = withScriptjs(withGoogleMap(connect(mapStateToProps, mapDispatchToProps)(class Map extends React.Component {
   state = {}
   onMapMounted = (ref) => {
-    if(!this.state.map) {
-      this.setState({map: ref})
-    }
+    this.setState({map: ref})
   }
-  onBoundsChanged = () => {
+  onBoundsChanged = (ev) => {
     const {map} = this.state;
     if(map) {
       const bounds = map.getBounds();
-      console.log(bounds);
-      //Google maps is weird...
+      const northEast = bounds.getNorthEast();
+      const southWest = bounds.getSouthWest();
       const extent = {
-        xmin: bounds.j.j,
-        ymin: bounds.l.j,
-        xmax: bounds.j.l,
-        ymax: bounds.j.l
+        xmin: southWest.lng(),
+        ymin: southWest.lat(),
+        xmax: northEast.lng(),
+        ymax: northEast.lat()
       }
+      
       this.props.updateExtent(extent);
     }
   }
