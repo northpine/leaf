@@ -1,4 +1,4 @@
-import {UPDATE_SEARCH, REPLACE_RESULTS, UPDATE_EXTENT, UPDATE_OPEN_SERVER, CLOSE_SERVER, UPDATE_HIGHLIGHTED_LAYER, UDPATE_SELECTED_LAYER} from '../constants';
+import {UPDATE_SEARCH, REPLACE_RESULTS, UPDATE_EXTENT, UPDATE_OPEN_SERVER, CLOSE_SERVER, UPDATE_HIGHLIGHTED_LAYER, UDPATE_SELECTED_LAYER, SET_FIRST_VIST} from '../constants';
 import axios from 'axios';
 export const updateSearch = (searchString) => {
   return {
@@ -56,6 +56,13 @@ export const updateSelectedLayer = (url, select = true) => {
     type: UDPATE_SELECTED_LAYER,
     url: url,
     select: select
+  }
+}
+
+export const setFirstVisit = (isFirst) => {
+  return {
+    type: SET_FIRST_VIST,
+    isFirst: isFirst
   }
 }
 

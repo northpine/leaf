@@ -4,9 +4,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import SvgIcon from '@material-ui/core/SvgIcon';
-import Typography from '@material-ui/core/Typography';
+import pineLogoPath from '../constants/icon-128-white.png';
 import { withStyles } from '@material-ui/core/styles';
-
 import { GithubSvg, GITHUB_REPO } from '../constants';
 import { openInNewTab } from '../utils';
 import SearchBar from './SearchBar';
@@ -46,14 +45,11 @@ class PrimarySearchAppBar extends React.Component {
 
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <Typography className={classes.title} variant="display1" color="inherit" noWrap>
-              Pine
-            </Typography>
+            <img src={pineLogoPath} width="32px" height="32px" />
             <SearchBar />
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>

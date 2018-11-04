@@ -3,8 +3,7 @@ import {connect} from 'react-redux';
 import ServerList from './ServerList';
 import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
-
-
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   root: {
@@ -23,9 +22,14 @@ class ResultList extends React.Component {
       return (
         <div className={classes.root}>
           <List component="nav">
-            {Object.keys(servers).map(server => {
-              return <ServerList key={server} url={server} />
-            })}
+              {Object.keys(servers).map(server => {
+                return (
+                  <div>
+                    <ServerList key={server} url={server} />
+                    <Divider />
+                  </div>
+                );
+              })}
           </List>
         </div>
       )
