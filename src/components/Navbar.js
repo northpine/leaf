@@ -49,7 +49,7 @@ class PrimarySearchAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <img src={pineLogoPath} width="32px" height="32px" />
+            <img src={pineLogoPath} width="32px" height="32px" alt="Pine" />
             <SearchBar />
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
