@@ -34,7 +34,7 @@ class ResultList extends React.Component {
         </div>
       )
     } else {
-      return "Nothing loaded"
+      return "You can search for data sources by moving the map and entering keywords in the searchbar"
     }
     
   }
